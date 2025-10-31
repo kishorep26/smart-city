@@ -1,10 +1,11 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime
+import httpx
 
 from database import (
     get_engine,          # Use this to get the engine instance
@@ -62,6 +63,26 @@ class StatsOut(BaseModel):
     active_agents: int
     average_response_time: float
     average_efficiency: float
+
+# --------- ENDPOINT: SEARCH ADDRESS ---------
+@app.get("/search-address")
+async def search_address(query: str = Query(..., min_length=3)):
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {
+        "q": query,
+        "format": "json",
+        "limit": 5
+    }
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(url, params=params, headers={"User-Agent": "smart-city-backend"})
+        resp.raise_for_status()
+        data = resp.json()
+    results = [{
+        "lat": float(item["lat"]),
+        "lon": float(item["lon"]),
+        "address": item["display_name"]
+    } for item in data]
+    return results
 
 # --------- TABLES ON STARTUP ---------
 @app.on_event("startup")
