@@ -10,6 +10,8 @@ import httpx
 from sqlalchemy.orm import Session
 import random
 from contextlib import asynccontextmanager
+from mangum import Mangum
+
 
 # Import database
 from database import (
@@ -330,6 +332,8 @@ def get_stats(db: Session = Depends(get_db)):
         "average_efficiency": round(sum(a.efficiency for a in agents) / max(len(agents), 1), 2)
     }
 
+# Wrap for Vercel
+handler = Mangum(app)
 
 if __name__ == "__main__":
     import uvicorn
