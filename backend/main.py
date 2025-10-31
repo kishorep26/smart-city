@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, Query
 from starlette.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List, Optional
 from sqlalchemy import select
@@ -17,10 +18,8 @@ from database import (
     AgentDB,
 )
 
-# Use '_' if you don't use the app parameter (removes warning for unused param)
 @asynccontextmanager
 async def lifespan(_):
-    # Startup logic: create tables and seed agents if needed
     engine = get_engine()
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -44,6 +43,19 @@ app.add_middleware(CORSMiddleware,  # type: ignore
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --------- UNIVERSAL CORS PREFLIGHT HANDLER ---------
+@app.options("/{rest_of_path:path}", include_in_schema=False)
+async def preflight_handler(rest_of_path: str):
+    return JSONResponse(
+        content={},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Credentials": "true",
+        }
+    )
 
 # --------- SCHEMAS ---------
 class IncidentLoc(BaseModel):
