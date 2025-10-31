@@ -8,7 +8,8 @@ interface GeoResult {
   address: string;
 }
 
-export default function ScenarioEditor({ onIncidentCreated }: { onIncidentCreated?: () => void }) {
+// Change this line - rename the prop
+export default function ScenarioEditor({ refreshAction }: { refreshAction?: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
@@ -113,8 +114,9 @@ export default function ScenarioEditor({ onIncidentCreated }: { onIncidentCreate
       setFormData({ type: 'fire', address: '', lat: 40.7128, lon: -74.0060, description: '' });
       setSelectedLocation(null);
 
-      if (onIncidentCreated) {
-        onIncidentCreated();
+      // Call the action - note the name change
+      if (refreshAction) {
+        refreshAction();
       }
     } catch (error) {
       console.error('Error creating incident:', error);
@@ -147,7 +149,6 @@ export default function ScenarioEditor({ onIncidentCreated }: { onIncidentCreate
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Incident Type */}
               <div>
                 <label className="block text-sm font-bold text-gray-300 mb-2">
                   Incident Type
@@ -163,7 +164,6 @@ export default function ScenarioEditor({ onIncidentCreated }: { onIncidentCreate
                 </select>
               </div>
 
-              {/* Address Search */}
               <div>
                 <label className="block text-sm font-bold text-gray-300 mb-2">
                   📍 Location
@@ -180,7 +180,6 @@ export default function ScenarioEditor({ onIncidentCreated }: { onIncidentCreate
                     className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border-2 border-slate-600 focus:border-blue-500 focus:outline-none"
                   />
 
-                  {/* Search Results Dropdown */}
                   {searchResults.length > 0 && (
                     <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800 border-2 border-slate-600 rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto">
                       {searchResults.map((result, idx) => (
@@ -211,7 +210,6 @@ export default function ScenarioEditor({ onIncidentCreated }: { onIncidentCreate
                 </div>
               </div>
 
-              {/* Description */}
               <div>
                 <label className="block text-sm font-bold text-gray-300 mb-2">
                   Description (Optional)
@@ -225,7 +223,6 @@ export default function ScenarioEditor({ onIncidentCreated }: { onIncidentCreate
                 />
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading || !selectedLocation}

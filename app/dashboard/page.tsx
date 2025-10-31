@@ -16,7 +16,8 @@ export default function Dashboard() {
   const router = useRouter();
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const handleIncidentCreated = () => {
+  // Rename this function too
+  const refreshAction = () => {
     setRefreshKey(prev => prev + 1);
   };
 
@@ -75,7 +76,8 @@ export default function Dashboard() {
           <AnalyticsDashboard key={`analytics-${refreshKey}`} />
         </div>
 
-        <ScenarioEditor onIncidentCreated={handleIncidentCreated} />
+        {/* Pass the action with correct name */}
+        <ScenarioEditor refreshAction={refreshAction} />
       </div>
     </div>
   );
