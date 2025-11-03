@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 
 interface Agent {
+  id: number;
   name: string;
   icon: string;
-  incident: string | null;
-  decision: string;
+  current_incident: string | null;
+  decision: string | null;
 }
 
 export default function AgentDecisionLog() {
@@ -18,7 +19,7 @@ export default function AgentDecisionLog() {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
         const response = await fetch(`${API_URL}/agents`);
         const data = await response.json();
-        setAgents(data.filter((a: Agent) => a.incident && a.incident.length > 0));
+        setAgents(data.filter((a: Agent) => a.current_incident));
       } catch (error) {
         console.error('Error fetching agents:', error);
       }
@@ -37,7 +38,7 @@ export default function AgentDecisionLog() {
           <div className="text-center text-gray-400 py-8">No active decisions</div>
         ) : (
           agents.map((agent, i) => (
-            <div key={i} className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+            <div key={agent.id} className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">{agent.icon}</span>
@@ -47,12 +48,10 @@ export default function AgentDecisionLog() {
                   </div>
                 </div>
               </div>
-
               <div className="mb-2">
                 <span className="text-sm text-blue-300 font-bold">Incident:</span>
-                <p className="text-sm text-gray-300">{agent.incident}</p>
+                <p className="text-sm text-gray-300">{agent.current_incident}</p>
               </div>
-
               <div className="bg-blue-900/30 p-2 rounded mb-2">
                 <span className="text-sm text-yellow-300 font-bold">Decision:</span>
                 <p className="text-sm text-gray-200">{agent.decision}</p>

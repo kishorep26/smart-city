@@ -8,6 +8,8 @@ interface Stats {
   resolved_incidents: number;
   total_agents: number;
   active_agents: number;
+  average_response_time: number;
+  average_efficiency: number;
 }
 
 export default function AnalyticsDashboard() {
@@ -16,7 +18,9 @@ export default function AnalyticsDashboard() {
     active_incidents: 0,
     resolved_incidents: 0,
     total_agents: 0,
-    active_agents: 0
+    active_agents: 0,
+    average_response_time: 0,
+    average_efficiency: 0
   });
 
   useEffect(() => {
@@ -41,7 +45,6 @@ export default function AnalyticsDashboard() {
       <h2 className="text-2xl font-black text-white mb-6">📊 Analytics</h2>
 
       <div className="space-y-6">
-        {/* Response Distribution */}
         <div>
           <h3 className="text-lg font-bold text-white mb-3">Incident Status</h3>
           <div className="space-y-3">
@@ -66,7 +69,6 @@ export default function AnalyticsDashboard() {
           </div>
         </div>
 
-        {/* Agent Stats */}
         <div>
           <h3 className="text-lg font-bold text-white mb-3">Agent Status</h3>
           <div className="grid grid-cols-2 gap-3">
@@ -80,6 +82,18 @@ export default function AnalyticsDashboard() {
                 <div className="text-xs text-gray-400">{item.type}</div>
               </div>
             ))}
+          </div>
+        </div>
+        <div>
+          <div className="flex flex-col md:flex-row items-center gap-4 mt-6">
+            <div className="flex-1">
+              <b className="text-white">Avg Response:</b>
+              <span className="ml-2 text-blue-400">{stats.average_response_time.toFixed(2)} km</span>
+            </div>
+            <div className="flex-1">
+              <b className="text-white">Avg Efficiency:</b>
+              <span className="ml-2 text-green-400">{stats.average_efficiency.toFixed(1)}%</span>
+            </div>
           </div>
         </div>
       </div>

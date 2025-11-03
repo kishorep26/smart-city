@@ -7,7 +7,7 @@ export default function MetricsPanel() {
     total: 0,
     active: 0,
     resolved: 0,
-    avgResponse: '2.3min',
+    avgResponse: '2.3km',
     efficiency: 94
   });
 
@@ -22,8 +22,8 @@ export default function MetricsPanel() {
           total: data.total_incidents,
           active: data.active_incidents,
           resolved: data.resolved_incidents,
-          avgResponse: '2.3min',
-          efficiency: 94
+          avgResponse: `${data.average_response_time.toFixed(2)}km`,
+          efficiency: Math.round(data.average_efficiency)
         });
       } catch (error) {
         console.error('Error fetching metrics:', error);
@@ -42,25 +42,21 @@ export default function MetricsPanel() {
         <div className="text-5xl font-black text-white mb-1">{metrics.total}</div>
         <div className="text-xs text-blue-300">All incidents</div>
       </div>
-
       <div className="bg-gradient-to-br from-red-700 to-red-900 border-2 border-red-400/50 rounded-2xl p-6 shadow-2xl">
         <div className="text-red-200 text-sm font-bold mb-2">🚨 Active</div>
         <div className="text-5xl font-black text-white mb-1 animate-pulse">{metrics.active}</div>
         <div className="text-xs text-red-300">Now responding</div>
       </div>
-
       <div className="bg-gradient-to-br from-green-700 to-green-900 border-2 border-green-400/50 rounded-2xl p-6 shadow-2xl">
         <div className="text-green-200 text-sm font-bold mb-2">✅ Resolved</div>
         <div className="text-5xl font-black text-white mb-1">{metrics.resolved}</div>
         <div className="text-xs text-green-300">Today</div>
       </div>
-
       <div className="bg-gradient-to-br from-purple-700 to-purple-900 border-2 border-purple-400/50 rounded-2xl p-6 shadow-2xl">
         <div className="text-purple-200 text-sm font-bold mb-2">⚡ Response</div>
         <div className="text-4xl font-black text-white mb-1">{metrics.avgResponse}</div>
-        <div className="text-xs text-purple-300">Avg time</div>
+        <div className="text-xs text-purple-300">Avg distance</div>
       </div>
-
       <div className="bg-gradient-to-br from-cyan-700 to-cyan-900 border-2 border-cyan-400/50 rounded-2xl p-6 shadow-2xl">
         <div className="text-cyan-200 text-sm font-bold mb-2">🤖 AI Efficiency</div>
         <div className="text-5xl font-black text-white mb-1">{metrics.efficiency}%</div>

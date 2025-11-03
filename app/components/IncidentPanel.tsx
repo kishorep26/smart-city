@@ -5,10 +5,7 @@ import { useState, useEffect } from 'react';
 interface Incident {
   id: number;
   type: string;
-  location: {
-    lat: number;
-    lon: number;
-  };
+  location: { lat: number; lon: number };
   description: string;
   status: string;
   timestamp: string;
@@ -45,7 +42,6 @@ export default function IncidentPanel() {
       });
 
       if (response.ok) {
-        console.log(`✅ Incident ${incidentId} resolved`);
         await fetchIncidents();
       }
     } catch (error) {
@@ -86,7 +82,6 @@ export default function IncidentPanel() {
         </h2>
         <span className="text-sm text-green-400 font-bold">✅ Resolved: {resolvedIncidents}</span>
       </div>
-
       <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar">
         {activeIncidents.length === 0 ? (
           <div className="text-center text-gray-400 py-8">No active incidents</div>
@@ -101,7 +96,9 @@ export default function IncidentPanel() {
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <h3 className="text-white font-bold text-lg capitalize">{incident.type} - {incident.description}</h3>
+                      <h3 className="text-white font-bold text-lg capitalize">
+                        {incident.type} - {incident.description}
+                      </h3>
                       <p className="text-blue-300 text-sm">📍 {incident.location.lat.toFixed(4)}, {incident.location.lon.toFixed(4)}</p>
                     </div>
                     <span className={`px-3 py-1 ${getStatusColor(incident.status)} rounded-full text-xs font-bold border`}>
@@ -111,8 +108,6 @@ export default function IncidentPanel() {
                   <span className="text-gray-400 text-xs">🕒 {new Date(incident.timestamp).toLocaleTimeString()}</span>
                 </div>
               </div>
-
-              {/* Action Button */}
               <button
                 onClick={() => resolveIncident(incident.id)}
                 disabled={resolving === incident.id}
@@ -124,7 +119,6 @@ export default function IncidentPanel() {
           ))
         )}
       </div>
-
       <button className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-xl transition shadow-lg">
         + View All
       </button>
