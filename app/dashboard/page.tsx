@@ -1,10 +1,12 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+const CityMap = dynamic(() => import('../components/CityMap'), { ssr: false });
+
 import MetricsPanel from '../components/MetricsPanel';
 import IncidentPanel from '../components/IncidentPanel';
 import AgentPanel from '../components/AgentPanel';
 import AnalyticsDashboard from '../components/AnalyticsDashboard';
-import CityMap from '../components/CityMap';
 import AgentDecisionLog from '../components/AgentDecisionLog';
 import ScenarioEditor from '../components/ScenarioEditor';
 import IncidentClassifier from '../components/IncidentClassifier';
