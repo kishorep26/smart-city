@@ -134,8 +134,9 @@ export default function ScenarioEditor({ refreshAction }: { refreshAction?: () =
       }
     } catch (error: any) {
       console.error('Error creating incident:', error);
-      // Show the actual error message to the user
-      alert(`Failed to create incident: ${error.message || 'Unknown error'}`);
+      // Detailed debug error
+      const targetUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      alert(`Connection Failed!\n\nTarget: ${targetUrl}\nError: ${error.message}\n\nPlease check: \n1. verify NEXT_PUBLIC_API_URL in Vercel\n2. verify Backend is running`);
     } finally {
       setLoading(false);
     }
