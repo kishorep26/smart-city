@@ -8,7 +8,6 @@ interface GeoResult {
   address: string;
 }
 
-// Change this line - rename the prop
 export default function ScenarioEditor({ refreshAction }: { refreshAction?: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -146,33 +145,39 @@ export default function ScenarioEditor({ refreshAction }: { refreshAction?: () =
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 right-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-105 font-bold text-lg z-50"
+        className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-8 py-4 rounded-full shadow-[0_0_30px_rgba(168,85,247,0.5)] hover:shadow-[0_0_50px_rgba(168,85,247,0.8)] transition-all transform hover:scale-110 hover:-translate-y-1 font-bold text-lg z-50 border-2 border-white/20 backdrop-blur-md animate-pulse-glow"
       >
-        ⚡ Trigger Scenario
+        <span className="mr-2">⚡</span> TRIGGER SCENARIO
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 max-w-md w-full border-2 border-white/20 shadow-2xl">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-black text-white">🎯 Create Incident</h2>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
+          <div className="glass-panel rounded-2xl p-8 max-w-md w-full border-2 border-white/20 shadow-2xl relative overflow-hidden">
+            {/* Background effects */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl -z-10"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl -z-10"></div>
+
+            <div className="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+              <h2 className="text-2xl font-black text-white flex gap-2 items-center">
+                <span className="text-purple-400">🎯</span> Create Incident
+              </h2>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-white text-2xl"
+                className="text-gray-400 hover:text-white text-2xl hover:rotate-90 transition-transform"
               >
                 ×
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2">
+                <label className="block text-xs font-bold text-blue-300 uppercase tracking-widest mb-2">
                   Incident Type
                 </label>
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border-2 border-slate-600 focus:border-blue-500 focus:outline-none"
+                  className="w-full bg-slate-900/80 text-white rounded-xl px-4 py-3 border border-white/10 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all appearance-none"
                 >
                   {incidentTypes.map((type) => (
                     <option key={type.value} value={type.value}>{type.label}</option>
@@ -181,8 +186,8 @@ export default function ScenarioEditor({ refreshAction }: { refreshAction?: () =
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2">
-                  📍 Location
+                <label className="block text-xs font-bold text-blue-300 uppercase tracking-widest mb-2">
+                  📍 Location Target
                 </label>
                 <div className="relative">
                   <input
@@ -192,59 +197,62 @@ export default function ScenarioEditor({ refreshAction }: { refreshAction?: () =
                       setFormData({ ...formData, address: e.target.value });
                       searchAddress(e.target.value);
                     }}
-                    placeholder="Type address... (e.g., Times Square, NYC)"
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border-2 border-slate-600 focus:border-blue-500 focus:outline-none"
+                    placeholder="Search coordinates..."
+                    className="w-full bg-slate-900/80 text-white rounded-xl px-4 py-3 border border-white/10 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all font-mono text-sm"
                   />
 
                   {searchResults.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800 border-2 border-slate-600 rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-white/20 rounded-xl shadow-2xl z-50 max-h-64 overflow-y-auto custom-scrollbar">
                       {searchResults.map((result, idx) => (
                         <button
                           key={idx}
                           type="button"
                           onClick={() => selectAddress(result)}
-                          className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-slate-700 border-b border-slate-600 last:border-b-0 transition"
+                          className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-purple-900/30 hover:text-white border-b border-white/5 last:border-b-0 transition flex flex-col gap-1"
                         >
-                          <div className="font-semibold text-white">📍 {result.address.split(',')[0]}</div>
-                          <div className="text-xs text-gray-500">{result.address.split(',').slice(1, 3).join(',')}</div>
+                          <div className="font-bold">📍 {result.address.split(',')[0]}</div>
+                          <div className="text-[10px] text-gray-500 font-mono truncate">{result.address}</div>
                         </button>
                       ))}
                     </div>
                   )}
 
                   {searching && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800 border-2 border-slate-600 rounded-lg p-3 z-50">
-                      <span className="text-gray-400 text-sm">🔍 Searching...</span>
+                    <div className="absolute right-3 top-3.5">
+                      <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                   )}
 
                   {selectedLocation && (
-                    <div className="mt-2 text-xs text-green-400">
-                      ✅ Location selected: {selectedLocation.address}
+                    <div className="mt-2 text-[10px] bg-emerald-500/10 text-emerald-400 p-2 rounded border border-emerald-500/20 font-mono">
+                      ✅ LOCKED: {selectedLocation.lat.toFixed(4)}, {selectedLocation.lon.toFixed(4)}
                     </div>
                   )}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2">
-                  Description (Optional)
+                <label className="block text-xs font-bold text-blue-300 uppercase tracking-widest mb-2">
+                  Situation Report (Optional)
                 </label>
                 <input
                   type="text"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="e.g., Building fire, Multiple injuries"
-                  className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border-2 border-slate-600 focus:border-blue-500 focus:outline-none"
+                  placeholder="e.g., High integrity failure, multiple casualties"
+                  className="w-full bg-slate-900/80 text-white rounded-xl px-4 py-3 border border-white/10 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading || !selectedLocation}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-purple-500/25 mt-4 group relative overflow-hidden"
               >
-                {loading ? '⏳ Creating...' : '🚀 Deploy Incident'}
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                <span className="relative flex items-center justify-center gap-2">
+                  {loading ? 'INITIATING...' : '🚀 DEPLOY INCIDENT'}
+                </span>
               </button>
             </form>
           </div>
