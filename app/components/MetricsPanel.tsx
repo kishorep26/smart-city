@@ -22,7 +22,7 @@ export default function MetricsPanel() {
           total: data.total_incidents,
           active: data.active_incidents,
           resolved: data.resolved_incidents,
-          avgResponse: `${data.average_response_time.toFixed(2)}km`,
+          avgResponse: `${(data.average_response_time || 0).toFixed(2)}km`,
           efficiency: Math.round(data.average_efficiency || 95)
         });
       } catch (error) {

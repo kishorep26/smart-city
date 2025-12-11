@@ -113,7 +113,7 @@ export default function IncidentPanel() {
                   </div>
                   <div className="flex items-center gap-3 text-xs text-gray-400 font-mono">
                     <span>ID: #{incident.id}</span>
-                    <span>📍 {incident.location.lat.toFixed(4)}, {incident.location.lon.toFixed(4)}</span>
+                    <span>📍 {(incident.location?.lat || 0).toFixed(4)}, {(incident.location?.lon || 0).toFixed(4)}</span>
                     <span>🕒 {new Date(incident.timestamp).toLocaleTimeString()}</span>
                   </div>
                 </div>
