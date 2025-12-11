@@ -25,6 +25,9 @@ const Circle = dynamic(
   { ssr: false }
 );
 
+// Dynamic import for the controller that uses useMap hook
+const MapController = dynamic(() => import('./MapController'), { ssr: false });
+
 // Leaflet icon fix needs to run only on client
 const FixLeafletIcon = () => {
   useEffect(() => {
@@ -79,18 +82,18 @@ export default function CityMap() {
     }
   };
 
-  const centerLat = incidents.length > 0 ? incidents[0].location.lat : 40.7128;
-  const centerLon = incidents.length > 0 ? incidents[0].location.lon : -74.0060;
-
   if (!isMounted) {
     return <div className="h-[500px] w-full bg-slate-800 rounded-2xl animate-pulse"></div>;
   }
+
+  // Default view (NYC)
+  const defaultCenter = [40.7128, -74.0060];
 
   return (
     <div className="h-[500px] w-full rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl relative z-10">
       <FixLeafletIcon />
       <MapContainer
-        center={[centerLat, centerLon]}
+        center={defaultCenter as L.LatLngExpression}
         zoom={12}
         style={{ height: '100%', width: '100%' }}
       >
@@ -98,6 +101,8 @@ export default function CityMap() {
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
+
+        <MapController incidents={incidents} />
 
         {incidents.map((incident) => (
           <div key={incident.id}>
