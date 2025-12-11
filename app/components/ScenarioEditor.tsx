@@ -40,35 +40,32 @@ export default function ScenarioEditor({ refreshAction }: { refreshAction?: () =
 
     setSearching(true);
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      // Direct client-side call to Nominatim to avoid backend timeouts/proxy issues
       const response = await fetch(
-          `${API_URL}/search-address?query=${encodeURIComponent(query)}`
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`
       );
 
       if (!response.ok) {
-        // Instead of throwing, gracefully fall back to example data for local testing.
-        const errorText = await response.text();
-        console.warn('Address search failed:', response.status, errorText);
-        setSearchResults([
-          {
-            lat: 33.4484,
-            lon: -112.0740,
-            address: '[Local fallback] Phoenix, AZ'
-          }
-        ]);
-        return;
+        throw new Error('Search failed');
       }
 
-      const results = await response.json();
+      const data = await response.json();
+
+      const results = data.map((item: any) => ({
+        lat: parseFloat(item.lat),
+        lon: parseFloat(item.lon),
+        address: item.display_name
+      }));
+
       setSearchResults(results);
     } catch (error) {
-      // Network errors or endpoint missing: show a dummy address
       console.error('Error searching address:', error);
+      // Fallback only on hard error
       setSearchResults([
         {
           lat: 40.7128,
           lon: -74.0060,
-          address: '[Local fallback] Times Square, NYC'
+          address: '[Offline Fallback] Times Square, NYC'
         }
       ]);
     } finally {
@@ -145,113 +142,113 @@ export default function ScenarioEditor({ refreshAction }: { refreshAction?: () =
   };
 
   return (
-      <>
-        <button
-            onClick={() => setIsOpen(true)}
-            className="fixed bottom-8 right-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-105 font-bold text-lg z-50"
-        >
-          ⚡ Trigger Scenario
-        </button>
+    <>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-8 right-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-105 font-bold text-lg z-50"
+      >
+        ⚡ Trigger Scenario
+      </button>
 
-        {isOpen && (
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 max-w-md w-full border-2 border-white/20 shadow-2xl">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-black text-white">🎯 Create Incident</h2>
-                  <button
-                      onClick={() => setIsOpen(false)}
-                      className="text-gray-400 hover:text-white text-2xl"
-                  >
-                    ×
-                  </button>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-300 mb-2">
-                      Incident Type
-                    </label>
-                    <select
-                        value={formData.type}
-                        onChange={(e) => setFormData({...formData, type: e.target.value})}
-                        className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border-2 border-slate-600 focus:border-blue-500 focus:outline-none"
-                    >
-                      {incidentTypes.map((type) => (
-                          <option key={type.value} value={type.value}>{type.label}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-gray-300 mb-2">
-                      📍 Location
-                    </label>
-                    <div className="relative">
-                      <input
-                          type="text"
-                          value={formData.address}
-                          onChange={(e) => {
-                            setFormData({...formData, address: e.target.value});
-                            searchAddress(e.target.value);
-                          }}
-                          placeholder="Type address... (e.g., Times Square, NYC)"
-                          className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border-2 border-slate-600 focus:border-blue-500 focus:outline-none"
-                      />
-
-                      {searchResults.length > 0 && (
-                          <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800 border-2 border-slate-600 rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto">
-                            {searchResults.map((result, idx) => (
-                                <button
-                                    key={idx}
-                                    type="button"
-                                    onClick={() => selectAddress(result)}
-                                    className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-slate-700 border-b border-slate-600 last:border-b-0 transition"
-                                >
-                                  <div className="font-semibold text-white">📍 {result.address.split(',')[0]}</div>
-                                  <div className="text-xs text-gray-500">{result.address.split(',').slice(1, 3).join(',')}</div>
-                                </button>
-                            ))}
-                          </div>
-                      )}
-
-                      {searching && (
-                          <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800 border-2 border-slate-600 rounded-lg p-3 z-50">
-                            <span className="text-gray-400 text-sm">🔍 Searching...</span>
-                          </div>
-                      )}
-
-                      {selectedLocation && (
-                          <div className="mt-2 text-xs text-green-400">
-                            ✅ Location selected: {selectedLocation.address}
-                          </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-gray-300 mb-2">
-                      Description (Optional)
-                    </label>
-                    <input
-                        type="text"
-                        value={formData.description}
-                        onChange={(e) => setFormData({...formData, description: e.target.value})}
-                        placeholder="e.g., Building fire, Multiple injuries"
-                        className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border-2 border-slate-600 focus:border-blue-500 focus:outline-none"
-                    />
-                  </div>
-
-                  <button
-                      type="submit"
-                      disabled={loading || !selectedLocation}
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {loading ? '⏳ Creating...' : '🚀 Deploy Incident'}
-                  </button>
-                </form>
-              </div>
+      {isOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 max-w-md w-full border-2 border-white/20 shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-black text-white">🎯 Create Incident</h2>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-gray-400 hover:text-white text-2xl"
+              >
+                ×
+              </button>
             </div>
-        )}
-      </>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-300 mb-2">
+                  Incident Type
+                </label>
+                <select
+                  value={formData.type}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border-2 border-slate-600 focus:border-blue-500 focus:outline-none"
+                >
+                  {incidentTypes.map((type) => (
+                    <option key={type.value} value={type.value}>{type.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-300 mb-2">
+                  📍 Location
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={formData.address}
+                    onChange={(e) => {
+                      setFormData({ ...formData, address: e.target.value });
+                      searchAddress(e.target.value);
+                    }}
+                    placeholder="Type address... (e.g., Times Square, NYC)"
+                    className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border-2 border-slate-600 focus:border-blue-500 focus:outline-none"
+                  />
+
+                  {searchResults.length > 0 && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800 border-2 border-slate-600 rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto">
+                      {searchResults.map((result, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => selectAddress(result)}
+                          className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-slate-700 border-b border-slate-600 last:border-b-0 transition"
+                        >
+                          <div className="font-semibold text-white">📍 {result.address.split(',')[0]}</div>
+                          <div className="text-xs text-gray-500">{result.address.split(',').slice(1, 3).join(',')}</div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {searching && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800 border-2 border-slate-600 rounded-lg p-3 z-50">
+                      <span className="text-gray-400 text-sm">🔍 Searching...</span>
+                    </div>
+                  )}
+
+                  {selectedLocation && (
+                    <div className="mt-2 text-xs text-green-400">
+                      ✅ Location selected: {selectedLocation.address}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-300 mb-2">
+                  Description (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="e.g., Building fire, Multiple injuries"
+                  className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border-2 border-slate-600 focus:border-blue-500 focus:outline-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading || !selectedLocation}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? '⏳ Creating...' : '🚀 Deploy Incident'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

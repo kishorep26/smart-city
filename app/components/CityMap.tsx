@@ -40,7 +40,7 @@ export default function CityMap() {
   };
 
   const getMarkerColor = (type: string) => {
-    switch(type) {
+    switch (type) {
       case 'fire': return '#ef4444';
       case 'accident': return '#f59e0b';
       case 'medical': return '#3b82f6';
@@ -59,8 +59,8 @@ export default function CityMap() {
         style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; OpenStreetMap'
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
 
         {incidents.map((incident) => (
