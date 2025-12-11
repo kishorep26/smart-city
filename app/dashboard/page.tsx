@@ -38,7 +38,7 @@ export default function Dashboard() {
       </div>
 
       {/* 4. Bottom Console (Neural Log) */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[600px] h-[140px] z-20 pointer-events-auto">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[600px] h-[200px] z-20 pointer-events-auto">
         <AgentDecisionLog />
       </div>
 

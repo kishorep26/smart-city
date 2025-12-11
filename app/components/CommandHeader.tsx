@@ -25,7 +25,7 @@ export default function CommandHeader() {
                 setStats({
                     active_incidents: data.active_incidents,
                     active_agents: data.active_agents || 0,
-                    total_agents: 6, // Hardcoded for now until backend sends total count
+                    total_agents: data.total_agents || 6,
                     threat_level: level
                 });
             } catch (error) { }

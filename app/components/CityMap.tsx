@@ -53,6 +53,8 @@ interface Incident {
 
 export default function CityMap() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [riskZones, setRiskZones] = useState<any[]>([]);
+  const [showRisk, setShowRisk] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -68,10 +70,22 @@ export default function CityMap() {
       const response = await fetch(`${API_URL}/incidents`);
       const data = await response.json();
       setIncidents(data.filter((i: Incident) => i.status !== 'resolved'));
-    } catch (error) {
-      console.error('Error fetching incidents:', error);
-    }
+    } catch (error) { console.error(error); }
   };
+
+  const toggleRiskZones = async () => {
+    if (!showRisk) {
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const response = await fetch(`${API_URL}/analytics/prediction`);
+        const data = await response.json();
+        if (data.status === 'success') {
+          setRiskZones(data.zones);
+        }
+      } catch (e) { console.error(e); }
+    }
+    setShowRisk(!showRisk);
+  }
 
   const getMarkerColor = (type: string) => {
     switch (type) {
@@ -91,9 +105,18 @@ export default function CityMap() {
 
   return (
     <div className="h-full w-full relative z-10">
+      <div className="absolute top-4 left-4 z-[400]">
+        <button
+          onClick={toggleRiskZones}
+          className={`px-4 py-2 rounded-lg font-bold text-xs border transition-all ${showRisk ? 'bg-red-500/80 text-white border-red-500' : 'bg-slate-900/80 text-gray-400 border-white/10 hover:text-white'}`}
+        >
+          {showRisk ? 'HIDE PREDICTIVE MODEL' : 'SHOW RISK ZONES (ML)'}
+        </button>
+      </div>
+
       <FixLeafletIcon />
       <MapContainer
-        center={defaultCenter as L.LatLngExpression}
+        center={defaultCenter as any}
         zoom={12}
         style={{ height: '100%', width: '100%' }}
       >
@@ -103,6 +126,28 @@ export default function CityMap() {
         />
 
         <MapController incidents={incidents} />
+
+        {/* Risk Zones Overlay */}
+        {showRisk && riskZones.map((zone) => (
+          <Circle
+            key={`zone-${zone.id}`}
+            center={[zone.lat, zone.lon]}
+            radius={zone.radius}
+            pathOptions={{
+              color: '#ef4444',
+              fillColor: '#ef4444',
+              fillOpacity: 0.15,
+              dashArray: '10, 10'
+            }}
+          >
+            <Popup>
+              <div className="text-xs font-bold text-red-600">
+                ⚠️ {zone.label}<br />
+                Risk Score: {(zone.risk_score * 100).toFixed(1)}%
+              </div>
+            </Popup>
+          </Circle>
+        ))}
 
         {incidents.map((incident) => (
           <div key={incident.id}>
