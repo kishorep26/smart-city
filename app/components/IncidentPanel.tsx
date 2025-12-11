@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import { Flame, Car, HeartPulse, Siren, AlertTriangle, BellOff, CheckCircle2 } from 'lucide-react';
 
 interface Incident {
   id: number;
@@ -63,11 +64,11 @@ export default function IncidentPanel() {
 
   const getIncidentIcon = (type: string) => {
     switch (type) {
-      case 'fire': return '🔥';
-      case 'accident': return '🚗';
-      case 'medical': return '🚑';
-      case 'crime': return '🚨';
-      default: return '⚠️';
+      case 'fire': return <Flame className="w-8 h-8 text-orange-500" />;
+      case 'accident': return <Car className="w-8 h-8 text-yellow-500" />;
+      case 'medical': return <HeartPulse className="w-8 h-8 text-pink-500" />;
+      case 'crime': return <Siren className="w-8 h-8 text-red-500" />;
+      default: return <AlertTriangle className="w-8 h-8 text-gray-400" />;
     }
   };
 
@@ -76,17 +77,24 @@ export default function IncidentPanel() {
   return (
     <div className="glass-panel rounded-2xl p-6 shadow-2xl h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-black text-white flex items-center gap-2">
-          <span className="animate-pulse">🚨</span> Active Incidents ({activeIncidents.length})
+        <h2 className="text-2xl font-black text-white flex items-center gap-3">
+          <div className="relative">
+            <Siren className="w-6 h-6 text-red-500" />
+            <span className="absolute -top-1 -right-1 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+            </span>
+          </div>
+          Active Incidents ({activeIncidents.length})
         </h2>
       </div>
 
       <div className="space-y-3 overflow-y-auto custom-scrollbar flex-1 pr-2">
         {activeIncidents.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 text-gray-500">
-            <div className="text-4xl mb-2 grayscale opacity-50">🌆</div>
-            <div>No active emergencies reported</div>
-            <div className="text-xs mt-1">City is secure</div>
+            <CheckCircle2 className="w-12 h-12 mb-2 text-emerald-500/50" />
+            <div className="font-bold text-lg">No Active Threats</div>
+            <div className="text-xs mt-1 text-emerald-400/70 font-mono">SECTOR SECURE</div>
           </div>
         ) : (
           activeIncidents.map((incident) => (
@@ -98,7 +106,7 @@ export default function IncidentPanel() {
               <div className="absolute inset-0 opacity-0 group-hover:opacity-5 pointer-events-none bg-[repeating-linear-gradient(45deg,#000,#000_10px,#ecc94b_10px,#ecc94b_20px)]"></div>
 
               <div className="flex items-start gap-4 relative z-10">
-                <div className="text-3xl filter drop-shadow-[0_0_10px_rgba(239,68,68,0.4)]">{getIncidentIcon(incident.type)}</div>
+                <div className="p-2 bg-slate-900/50 rounded-lg">{getIncidentIcon(incident.type)}</div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-2">
                     <div className="pr-2">
@@ -121,9 +129,14 @@ export default function IncidentPanel() {
               <button
                 onClick={() => resolveIncident(incident.id)}
                 disabled={resolving === incident.id}
-                className="mt-3 w-full bg-gradient-to-r from-red-900/40 to-red-800/40 hover:from-emerald-600 hover:to-emerald-700 border border-red-500/20 hover:border-emerald-400 text-gray-300 hover:text-white font-bold py-2 rounded-lg transition-all text-sm uppercase tracking-wide"
+                className="mt-3 w-full bg-gradient-to-r from-red-900/40 to-red-800/40 hover:from-emerald-600 hover:to-emerald-700 border border-red-500/20 hover:border-emerald-400 text-gray-300 hover:text-white font-bold py-2 rounded-lg transition-all text-sm uppercase tracking-wide flex items-center justify-center gap-2"
               >
-                {resolving === incident.id ? '⏳ Processing...' : 'Resolve Situation'}
+                {resolving === incident.id ? (
+                  <>
+                    <span className="w-3 h-3 border-2 border-white/50 border-t-white rounded-full animate-spin"></span>
+                    Processing...
+                  </>
+                ) : 'Resolve Situation'}
               </button>
             </div>
           ))

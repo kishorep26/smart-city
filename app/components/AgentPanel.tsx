@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import { Truck, Shield, HeartPulse, Bot, Radio, Zap } from 'lucide-react';
 
 interface Agent {
   id: number;
   name: string;
+  type: string; // Added type to interface
   icon: string;
   status: string;
   current_incident: string | null;
@@ -62,15 +64,26 @@ export default function AgentPanel() {
     }
   };
 
+  const getAgentIcon = (type: string) => {
+    const t = type.toLowerCase();
+    if (t.includes('fire')) return <Truck className="w-8 h-8 text-orange-400" />;
+    if (t.includes('police')) return <Shield className="w-8 h-8 text-blue-400" />;
+    if (t.includes('medic')) return <HeartPulse className="w-8 h-8 text-pink-400" />;
+    return <Bot className="w-8 h-8 text-gray-400" />;
+  };
+
   return (
     <div className="glass-panel rounded-2xl p-6 shadow-2xl h-full flex flex-col">
       <h2 className="text-2xl font-black text-white mb-6 flex items-center gap-3">
-        <span className="text-4xl text-blue-400">🤖</span> Active Agents ({agents.length})
+        <Radio className="w-6 h-6 text-blue-400 animate-pulse" /> Active Agents ({agents.length})
       </h2>
 
       <div className="space-y-4 overflow-y-auto custom-scrollbar flex-1 pr-2">
         {agents.length === 0 ? (
-          <div className="text-center text-gray-400 py-8 animate-pulse">Scanning Agent Network...</div>
+          <div className="text-center text-gray-400 py-8 animate-pulse flex flex-col items-center">
+            <Radio className="w-8 h-8 mb-2 opacity-50" />
+            Scanning Agent Network...
+          </div>
         ) : (
           agents.map(agent => (
             <div
@@ -85,7 +98,9 @@ export default function AgentPanel() {
 
               <div className="flex items-start gap-4 mb-3">
                 <div className="relative">
-                  <div className="text-4xl filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">{agent.icon}</div>
+                  <div className="p-2 bg-slate-900/50 rounded-xl border border-white/5">
+                    {getAgentIcon(agent.type)}
+                  </div>
                   <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-slate-900 ${agent.status === 'available' ? 'bg-emerald-500 animate-pulse' : 'bg-gray-500'
                     }`}></div>
                 </div>
@@ -101,7 +116,7 @@ export default function AgentPanel() {
 
                   {/* Status Message */}
                   <div className="text-xs text-cyan-200 mb-3 flex items-center gap-2">
-                    <span className="w-1 h-1 bg-cyan-400 rounded-full animate-ping"></span>
+                    <Zap className="w-3 h-3 text-cyan-400" />
                     {agent.status_message || "Awaiting orders..."}
                   </div>
                 </div>
