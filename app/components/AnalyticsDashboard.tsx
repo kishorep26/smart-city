@@ -29,7 +29,7 @@ export default function AnalyticsDashboard() {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
         const response = await fetch(`${API_URL}/stats`);
         setStats(await response.json());
-      } catch (error) {}
+      } catch (error) { }
     };
     fetchStats();
     const interval = setInterval(fetchStats, 5000);
@@ -62,11 +62,11 @@ export default function AnalyticsDashboard() {
           <div className="flex gap-4 mt-4">
             <div>
               <div className="text-xs text-gray-400">Avg Response</div>
-              <div className="text-lg text-blue-300">{stats.average_response_time.toFixed(2)} km</div>
+              <div className="text-lg text-blue-300">{(stats.average_response_time || 0).toFixed(2)} km</div>
             </div>
             <div>
               <div className="text-xs text-gray-400">Avg Efficiency</div>
-              <div className="text-lg text-green-300">{stats.average_efficiency.toFixed(2)} %</div>
+              <div className="text-lg text-green-300">{(stats.average_efficiency || 0).toFixed(2)} %</div>
             </div>
           </div>
         </div>

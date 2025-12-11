@@ -97,7 +97,7 @@ export default function AgentPanel() {
                       {agent.status}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-400 font-mono mb-2">{agent.role.toUpperCase()} UNIT</div>
+                  <div className="text-xs text-gray-400 font-mono mb-2">{(agent.role || 'unit').toUpperCase()} UNIT</div>
 
                   {/* Status Message */}
                   <div className="text-xs text-cyan-200 mb-3 flex items-center gap-2">
