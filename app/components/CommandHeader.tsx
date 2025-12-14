@@ -11,6 +11,7 @@ export default function CommandHeader() {
         total_agents: 0,
         threat_level: 'ANALYZING...'
     });
+    const [isResetting, setIsResetting] = useState(false);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -51,6 +52,38 @@ export default function CommandHeader() {
             case 'ELEVATED': return 'text-orange-400 bg-orange-400/10 border-orange-400/50';
             case 'SECURE': return 'text-emerald-500 bg-emerald-500/10 border-emerald-500/50';
             default: return 'text-emerald-400 bg-emerald-400/10 border-emerald-400/50';
+        }
+    };
+
+    const handleReset = async () => {
+        if (!confirm("⚠️ INITIATE PROTOCOL ZERO: Wipe all system data?")) return;
+
+        setIsResetting(true);
+        try {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const response = await fetch(`${API_URL}/reset`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Reset failed: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Reset successful:', result);
+
+            // Wait a moment for backend to settle
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Reload page
+            window.location.reload();
+        } catch (e) {
+            console.error('Reset error:', e);
+            alert("Protocol Failed: " + e);
+            setIsResetting(false);
         }
     };
 
@@ -118,18 +151,12 @@ export default function CommandHeader() {
                         </span>
                     </div>
                     <button
-                        onClick={async () => {
-                            if (!confirm("⚠️ INITIATE PROTOCOL ZERO: Wipe all system data?")) return;
-                            try {
-                                const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-                                await fetch(`${API_URL}/reset`, { method: 'POST' });
-                                window.location.reload();
-                            } catch (e) { alert("Protocol Failed: " + e); }
-                        }}
-                        className="p-2 hover:bg-red-900/40 rounded-sm transition-colors group mr-2 border border-transparent hover:border-red-900"
+                        onClick={handleReset}
+                        disabled={isResetting}
+                        className={`p-2 hover:bg-red-900/40 rounded-sm transition-colors group mr-2 border border-transparent hover:border-red-900 ${isResetting ? 'opacity-50 cursor-not-allowed' : ''}`}
                         title="Hard Reset System"
                     >
-                        <Layers className="w-5 h-5 text-slate-600 group-hover:text-red-500 transition-colors" />
+                        <Layers className={`w-5 h-5 text-slate-600 group-hover:text-red-500 transition-colors ${isResetting ? 'animate-spin' : ''}`} />
                     </button>
                     <Link href="/" className="p-2 hover:bg-slate-800 rounded-sm transition-colors group" title="Disconnect System">
                         <LogOut className="w-5 h-5 text-slate-600 group-hover:text-slate-300 transition-colors" />
