@@ -1,4 +1,3 @@
-```
 import Link from 'next/link';
 import { Building2, Activity, Cpu, ShieldCheck, ArrowRight, Zap, CheckCircle2, BrainCircuit, Shield } from 'lucide-react';
 
@@ -34,7 +33,7 @@ export default function LandingPage() {
       <main className="relative z-10 container mx-auto px-6 pt-32 pb-12 flex flex-col items-start text-left max-w-7xl">
 
         <div className="inline-flex items-center gap-3 px-4 py-2 border-l-2 border-amber-600 bg-amber-900/10 text-amber-500 text-xs font-mono mb-10 tracking-[0.2em] uppercase">
-            <span>Protocol Zero Active</span>
+          <span>Protocol Zero Active</span>
         </div>
 
         <h1 className="text-7xl md:text-9xl font-black mb-8 tracking-tighter text-white leading-[0.85] opacity-90">
@@ -89,11 +88,11 @@ export default function LandingPage() {
 
         <div className="mt-32 w-full flex justify-between items-end text-[10px] text-slate-700 font-mono tracking-widest uppercase">
           <div>
-             SECURE CONNECTION ESTABLISHED<br/>
-             NODE: GOTHAM-CENTRAL-01
+            SECURE CONNECTION ESTABLISHED<br />
+            NODE: GOTHAM-CENTRAL-01
           </div>
           <div className="text-right">
-            (C) 2025 WAYNE ENTERPRISES<br/>
+            (C) 2025 WAYNE ENTERPRISES<br />
             MILITARY GRADE ENCRYPTION
           </div>
         </div>
@@ -102,4 +101,3 @@ export default function LandingPage() {
     </div>
   );
 }
-```
