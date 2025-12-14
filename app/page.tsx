@@ -1,112 +1,105 @@
+```
 import Link from 'next/link';
-import { Building2, Activity, Cpu, Globe, ShieldCheck, Play, ArrowRight, Zap, CheckCircle2, BrainCircuit } from 'lucide-react';
+import { Building2, Activity, Cpu, ShieldCheck, ArrowRight, Zap, CheckCircle2, BrainCircuit, Shield } from 'lucide-react';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-black relative overflow-x-hidden font-[Outfit] text-white selection:bg-purple-500/30">
+    <div className="min-h-screen relative overflow-x-hidden font-sans text-slate-300 selection:bg-amber-500/30">
 
-      {/* Background Grid & glows */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(20,20,30,0.9)_1px,transparent_1px),linear-gradient(90deg,rgba(20,20,30,0.9)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]"></div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[100px]"></div>
+      {/* Noir Background */}
+      <div className="fixed inset-0 z-0 bg-[#02040a]">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(30,41,59,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(30,41,59,0.2)_1px,transparent_1px)] bg-[size:100px_100px] opacity-20"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-black to-transparent"></div>
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-50 flex items-center justify-between px-8 py-6 border-b border-white/5 backdrop-blur-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-tr from-cyan-500 to-purple-600 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.5)]">
-            <Cpu className="text-white w-6 h-6" />
+      <nav className="relative z-50 flex items-center justify-between px-10 py-8 border-b border-white/5 backdrop-blur-sm">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 border border-slate-700 bg-slate-900 rounded-sm flex items-center justify-center">
+            <Shield className="text-slate-400 w-5 h-5" />
           </div>
-          <span className="font-bold tracking-widest text-lg">CORTEX<span className="text-purple-400">.AI</span></span>
+          <span className="font-bold tracking-[0.3em] text-lg text-white">SENTINEL<span className="text-amber-600">.V4</span></span>
         </div>
-        <div className="flex items-center gap-6 text-sm font-medium text-gray-400">
+        <div className="flex items-center gap-8 text-xs font-mono tracking-widest text-slate-500 uppercase">
           <span className="flex items-center gap-2">
-            <Activity className="w-4 h-4 text-emerald-500 animate-pulse" />
-            SYSTEM ONLINE
+            <Activity className="w-3 h-3 text-emerald-700 animate-pulse" />
+            System Optimal
           </span>
-          <span>v2.4.0-RC</span>
+          <span>Build 9.2.14</span>
+          <span className="text-amber-700/50">Restricted Access</span>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <main className="relative z-10 container mx-auto px-6 pt-20 pb-12 flex flex-col items-center text-center">
+      <main className="relative z-10 container mx-auto px-6 pt-32 pb-12 flex flex-col items-start text-left max-w-7xl">
 
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 text-xs font-mono mb-8 animate-fade-in-up">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-          </span>
-          NEURAL NETWORK DEPLOYED LIVE
+        <div className="inline-flex items-center gap-3 px-4 py-2 border-l-2 border-amber-600 bg-amber-900/10 text-amber-500 text-xs font-mono mb-10 tracking-[0.2em] uppercase">
+            <span>Protocol Zero Active</span>
         </div>
 
-        <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tight leading-none bg-gradient-to-b from-white via-white to-gray-500 bg-clip-text text-transparent">
-          SENTIENT CITY<br />
-          <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">OPERATING SYSTEM</span>
+        <h1 className="text-7xl md:text-9xl font-black mb-8 tracking-tighter text-white leading-[0.85] opacity-90">
+          GOTHAM<br />
+          <span className="text-slate-800 text-stroke-white">OVERWATCH</span>
         </h1>
 
-        <p className="text-xl text-gray-400 max-w-2xl mb-12 leading-relaxed">
-          The world's first autonomous emergency response grid.
-          <br />coordinate fire, medical, and police units with <span className="text-white font-bold">zero latency</span> using our advanced neural dispatch engine.
+        <p className="text-2xl text-slate-500 max-w-2xl mb-16 font-light leading-relaxed border-l border-slate-800 pl-6">
+          Advanced city-wide surveillance and autonomous dispatch grid.
+          <br />Maintained by <span className="text-slate-300 font-bold tracking-widest uppercase">Wayne Enterprises</span>.
         </p>
 
         <div className="flex flex-col md:flex-row gap-6 items-center">
           <Link
             href="/dashboard"
-            className="group relative px-10 py-5 bg-white text-black font-black text-lg rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.5)]"
+            className="group relative px-12 py-6 bg-white text-black font-bold text-lg overflow-hidden hover:bg-amber-500 transition-colors duration-300 rounded-sm"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <span className="relative z-10 flex items-center gap-2">
-              INITIALIZE SYSTEM <ArrowRight className="w-5 h-5" />
+            <span className="relative z-10 flex items-center gap-4 tracking-widest uppercase">
+              Initialize Interface <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </span>
           </Link>
-
-          {/* Simulation button removed as requested */}
         </div>
 
-        {/* Feature Grid (Holographic style) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-24 w-full max-w-6xl text-left">
+        {/* Feature Grid (Industrial style) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-32 w-full border-t border-slate-800 pt-16">
 
-          <div className="glass-panel p-8 rounded-3xl border border-white/10 hover:border-purple-500/50 transition duration-500 group">
-            <div className="w-12 h-12 bg-purple-900/50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition border border-purple-500/20">
-              <BrainCircuit className="w-6 h-6 text-purple-400" />
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-white">Neural Dispatch</h3>
-            <p className="text-gray-400 leading-relaxed">
-              Proprietary AI analyzes stress levels, fuel, and traffic patterns to assign the optimal unit in milliseconds.
+          <div className="p-8 border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition duration-500 group">
+            <BrainCircuit className="w-10 h-10 text-slate-600 mb-6 group-hover:text-amber-500 transition-colors" />
+            <h3 className="text-xl font-bold mb-4 text-white uppercase tracking-wider">Predictive Justice</h3>
+            <p className="text-slate-500 text-sm leading-7">
+              Algorithmic crime prediction utilizing historical data points and real-time stress analysis of the populace.
             </p>
           </div>
 
-          <div className="glass-panel p-8 rounded-3xl border border-white/10 hover:border-cyan-500/50 transition duration-500 group">
-            <div className="w-12 h-12 bg-cyan-900/50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition border border-cyan-500/20">
-              <Globe className="w-6 h-6 text-cyan-400" />
-            </div>
-            <div className="absolute top-8 right-8 text-cyan-500 text-xs font-mono opacity-50">GLOBAL_READY</div>
-            <h3 className="text-xl font-bold mb-3 text-white">Dynamic Sectors</h3>
-            <p className="text-gray-400 leading-relaxed">
-              Infinite scaling. The system auto-spawns task forces in any geohash sector worldwide upon incident detection.
+          <div className="p-8 border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition duration-500 group">
+            <ShieldCheck className="w-10 h-10 text-slate-600 mb-6 group-hover:text-blue-500 transition-colors" />
+            <h3 className="text-xl font-bold mb-4 text-white uppercase tracking-wider">Automated Dispatch</h3>
+            <p className="text-slate-500 text-sm leading-7">
+              Zero-latency unit deployment. The system identifies optimal response vectors for Fire, Medical, and Riot Control.
             </p>
           </div>
 
-          <div className="glass-panel p-8 rounded-3xl border border-white/10 hover:border-pink-500/50 transition duration-500 group">
-            <div className="w-12 h-12 bg-pink-900/50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition border border-pink-500/20">
-              <ShieldCheck className="w-6 h-6 text-pink-400" />
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-white">Civilian Safety</h3>
-            <p className="text-gray-400 leading-relaxed">
-              Real-time tracking of safety indices. Prioritize human life with our ethically-aligned reinforcement learning model.
+          <div className="p-8 border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition duration-500 group">
+            <Cpu className="w-10 h-10 text-slate-600 mb-6 group-hover:text-white transition-colors" />
+            <h3 className="text-xl font-bold mb-4 text-white uppercase tracking-wider">Global Grid</h3>
+            <p className="text-slate-500 text-sm leading-7">
+              Scalable architecture capable of monitoring multiple metropolises simultaneously via satellite uplink.
             </p>
           </div>
 
         </div>
 
-        <div className="mt-20 pt-10 border-t border-white/5 w-full flex justify-between items-center text-xs text-gray-500 font-mono">
-          <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> SYSTEM INTEGRITY: 100%</div>
-          <div className="flex items-center gap-2"><Zap className="w-3 h-3 text-yellow-500" /> ENCRYPTED CONNECTION</div>
-          <div>(C) 2025 CORTEX SYSTEMS</div>
+        <div className="mt-32 w-full flex justify-between items-end text-[10px] text-slate-700 font-mono tracking-widest uppercase">
+          <div>
+             SECURE CONNECTION ESTABLISHED<br/>
+             NODE: GOTHAM-CENTRAL-01
+          </div>
+          <div className="text-right">
+            (C) 2025 WAYNE ENTERPRISES<br/>
+            MILITARY GRADE ENCRYPTION
+          </div>
         </div>
 
       </main>
     </div>
   );
 }
+```
