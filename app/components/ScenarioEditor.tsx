@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react';
+import { Flame, Car, HeartPulse, Siren } from 'lucide-react';
 
 interface GeoResult {
   lat: number;
@@ -25,10 +26,10 @@ export default function ScenarioEditor({ refreshAction }: { refreshAction?: () =
   const [selectedLocation, setSelectedLocation] = useState<GeoResult | null>(null);
 
   const incidentTypes = [
-    { value: 'fire', label: '🔥 Fire' },
-    { value: 'accident', label: '🚗 Accident' },
-    { value: 'medical', label: '🚑 Medical' },
-    { value: 'crime', label: '🚨 Crime' }
+    { value: 'fire', label: 'Fire', icon: Flame, color: 'text-orange-500' },
+    { value: 'accident', label: 'Accident', icon: Car, color: 'text-yellow-500' },
+    { value: 'medical', label: 'Medical', icon: HeartPulse, color: 'text-pink-500' },
+    { value: 'crime', label: 'Crime', icon: Siren, color: 'text-red-500' }
   ];
 
   const searchAddress = async (query: string) => {

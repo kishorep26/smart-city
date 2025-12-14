@@ -64,11 +64,12 @@ export default function IncidentPanel() {
 
   const getIncidentIcon = (type: string) => {
     switch (type) {
-      case 'fire': return <Flame className="w-8 h-8 text-orange-500" />;
-      case 'accident': return <Car className="w-8 h-8 text-yellow-500" />;
-      case 'medical': return <HeartPulse className="w-8 h-8 text-pink-500" />;
-      case 'crime': return <Siren className="w-8 h-8 text-red-500" />;
-      default: return <AlertTriangle className="w-8 h-8 text-gray-400" />;
+      case 'fire': return <Flame className="w-8 h-8 text-orange-600" />;
+      case 'accident': return <Car className="w-8 h-8 text-yellow-600" />;
+      case 'medical': return <HeartPulse className="w-8 h-8 text-pink-600" />;
+      case 'crime': return <Siren className="w-8 h-8 text-red-600" />;
+      case 'police': return <Siren className="w-8 h-8 text-blue-600" />;
+      default: return <AlertTriangle className="w-8 h-8 text-slate-500" />;
     }
   };
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
+import { Brain } from 'lucide-react';
 
 interface IncidentHistoryEntry {
   id: number;
@@ -34,7 +35,7 @@ export default function AgentDecisionLog() {
   return (
     <div className="glass-panel rounded-sm p-6 shadow-2xl h-full flex flex-col border border-slate-800/50">
       <h2 className="text-xl font-bold text-slate-200 mb-6 flex items-center gap-3 tracking-wider uppercase border-b border-slate-800 pb-4">
-        <span className="text-3xl text-amber-600">🧠</span> Neural Log
+        <Brain className="w-6 h-6 text-amber-600" /> Neural Log
         <span className="text-xs font-mono text-slate-600 bg-black/30 px-2 py-1 rounded ml-auto border border-slate-800">
           LIVE FEED
         </span>

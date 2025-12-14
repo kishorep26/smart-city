@@ -1,13 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { Truck, Shield, HeartPulse, Bot, Radio, Zap } from 'lucide-react';
+import { Radio, Truck, ShieldCheck, Ambulance, Bot, Fuel, Brain, Zap } from 'lucide-react';
 
 interface Agent {
   id: number;
   name: string;
-  type: string; // Added type to interface
-  icon: string;
+  type: string;
   status: string;
   current_incident: string | null;
   decision: string | null;
@@ -15,45 +14,46 @@ interface Agent {
   efficiency: number;
   total_responses: number;
   successful_responses: number;
-  updated_at?: string;
+  updated_at: string;
+  lat: number;
+  lon: number;
   fuel: number;
   stress: number;
   role: string;
-  status_message: string;
+  status_message: string | null;
 }
 
 export default function AgentPanel() {
   const [agents, setAgents] = useState<Agent[]>([]);
 
   useEffect(() => {
-    const fetchAgents = async () => {
-      try {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        const response = await fetch(`${API_URL}/agents`);
-        const data = await response.json();
-        setAgents(data);
-      } catch (error) {
-        setAgents([]);
-      }
-    };
-
     fetchAgents();
-    const interval = setInterval(fetchAgents, 3500);
+    const interval = setInterval(fetchAgents, 3000);
     return () => clearInterval(interval);
   }, []);
 
-  const getStatusColor = (status: string) => {
-    if (!status) return '';
-    const s = status.toLowerCase();
-    if (s === 'refueling') return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
-    if (s === 'responding') return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
-    if (s === 'available') return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
-    if (s === 'busy') return 'bg-red-500/20 text-red-300 border-red-500/30';
-    return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+  const fetchAgents = async () => {
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_URL}/agents`);
+      const data = await response.json();
+      setAgents(data);
+    } catch (error) {
+      console.error('Error fetching agents:', error);
+    }
   };
 
-  const getBarColor = (val: number, type: 'fuel' | 'stress') => {
-    if (type === 'fuel') {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'available': return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+      case 'busy': return 'bg-red-500/20 text-red-300 border-red-500/30';
+      case 'refueling': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+    }
+  };
+
+  const getBarColor = (val: number, isFuel: boolean) => {
+    if (isFuel) {
       if (val < 20) return 'bg-red-500';
       if (val < 50) return 'bg-yellow-500';
       return 'bg-emerald-500';
@@ -66,10 +66,10 @@ export default function AgentPanel() {
 
   const getAgentIcon = (type: string) => {
     const t = type.toLowerCase();
-    if (t.includes('fire')) return <Truck className="w-8 h-8 text-orange-400" />;
-    if (t.includes('police')) return <Shield className="w-8 h-8 text-blue-400" />;
-    if (t.includes('medic')) return <HeartPulse className="w-8 h-8 text-pink-400" />;
-    return <Bot className="w-8 h-8 text-gray-400" />;
+    if (t.includes('fire')) return <Truck className="w-8 h-8 text-orange-500" />;
+    if (t.includes('police')) return <ShieldCheck className="w-8 h-8 text-blue-500" />;
+    if (t.includes('medic')) return <Ambulance className="w-8 h-8 text-pink-500" />;
+    return <Bot className="w-8 h-8 text-slate-500" />;
   };
 
   return (
@@ -131,7 +131,7 @@ export default function AgentPanel() {
                   </div>
                   <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
                     <div
-                      className={`h-full ${getBarColor(agent.fuel, 'fuel')} transition-all duration-1000`}
+                      className={`h-full ${getBarColor(agent.fuel, true)} transition-all duration-1000`}
                       style={{ width: `${agent.fuel}%` }}
                     ></div>
                   </div>
@@ -143,7 +143,7 @@ export default function AgentPanel() {
                   </div>
                   <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
                     <div
-                      className={`h-full ${getBarColor(agent.stress, 'stress')} transition-all duration-1000`}
+                      className={`h-full ${getBarColor(agent.stress, false)} transition-all duration-1000`}
                       style={{ width: `${agent.stress}%` }}
                     ></div>
                   </div>
