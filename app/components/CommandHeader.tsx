@@ -91,7 +91,9 @@ export default function CommandHeader() {
                         <span className="text-[10px] text-gray-400 uppercase tracking-wider font-bold">Fleet Readiness</span>
                     </div>
                     <div className="flex items-baseline gap-1">
-                        <span className="text-3xl font-black text-blue-400 font-[Outfit] leading-none">{stats.active_agents}</span>
+                        <span className="text-3xl font-black text-blue-400 font-[Outfit] leading-none">
+                            {Math.max(0, stats.total_agents - stats.active_agents)}
+                        </span>
                         <span className="text-sm text-gray-600 font-mono">/ {stats.total_agents}</span>
                     </div>
                 </div>
