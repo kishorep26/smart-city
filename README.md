@@ -1,5 +1,7 @@
 # Sentinel Command Frontend
 
+[![CI](https://github.com/kishorep26/sentinel-command-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/kishorep26/sentinel-command-frontend/actions/workflows/ci.yml)
+
 ## Overview
 A modern frontend application for the Sentinel Command system, providing an intuitive interface for monitoring, managing, and controlling security operations. The application features real-time data visualization, command execution, and comprehensive dashboard analytics for security management.
 
