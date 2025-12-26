@@ -22,6 +22,10 @@ A modern frontend application for the Sentinel Command system, providing an intu
 - Build Tool: Vite or Create React App
 - Styling: CSS Modules or Styled Components
 
+- ## Screenshots
+
+![Sentinel Command Interface](https://htbuikuqbwstckwscktq.supabase.co/storage/v1/object/public/images/projects/Sentinel-Command.png)
+
 ## Getting Started
 1. Install dependencies: npm install
 2. Configure API endpoints in .env file
